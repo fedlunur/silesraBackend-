@@ -1,0 +1,11 @@
+*.log
+logs/
+temp/
+example.txt
+db.sqlite3
+venv
+README.md
+static
+csm
+requirments.txt
+manage.py

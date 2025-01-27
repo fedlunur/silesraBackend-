@@ -1,0 +1,7 @@
+/* static/css/custom_djazmin.css */
+.brand-logo {
+    background-image: url("/static/images/logo.png") !important;
+    background-size: contain;
+    width: 200px;
+    height: 50px;
+}

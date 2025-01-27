@@ -1,0 +1,58 @@
+
+
+services:
+
+  db:
+    image: postgres:13
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=silesra
+      - POSTGRES_USER=silesra
+      - POSTGRES_PASSWORD=silesra
+    ports:
+      - "5432:5432"
+    restart: always
+    
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+  web:
+    build: .
+    image: silesralatest
+    command: python manage.py runserver 0.0.0.0:8888
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8888:8888"
+    environment:
+      - POSTGRES_NAME=silesra
+      - POSTGRES_USER=silesra
+      - POSTGRES_PASSWORD=silesra
+      - POSTGRES_HOST=localhost
+    env_file:
+      - .env  
+    depends_on:
+      - db
+#   web:
+#     build: .
+#     image: csmlatest
+#     network_mode: "host"
+#     command: python manage.py runserver 0.0.0.0:8000
+#     volumes:
+#       - .:/app
+#     ports:
+#       - "8000:8000"
+#     depends_on:
+#       - db
+#     environment:
+#       - DEBUG=True
+#     restart: always
+   
+
+
+
