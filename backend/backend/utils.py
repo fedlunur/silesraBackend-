@@ -45,7 +45,7 @@ model_mapping = {
         'serviceorbussinesstypes':BusienssOrServiceType,
         'carmake':carMake,
         'cartype':CarType,
-        'Customerbank':CustomerBank,
+        'customerbank':CustomerBank,
         'Generalsetting':GeneralSetting,
         'otheritemcatagory':OtherItemCategory,
         'Silesrabankaccount':SilesraBankAccount
