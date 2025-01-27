@@ -3,7 +3,7 @@ from django.urls import path, re_path
 from django.contrib import admin
 from django.urls import path,include
 
-from item.views import *
+from products.views import *
 from user_managment.views import *
 from .views import GenericListAPIView,PasswordChangeView
 from django.urls import path, include

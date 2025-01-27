@@ -6,10 +6,10 @@ from rest_framework.response import Response
 # from .utils import import_all_models
 from .utils import genericlist_filds_nested_model
 from user_managment.models import *
-from item.models import *
+
 from products.models import *
 from .utils import *
-
+from products.views import *
 from datetime import datetime
 
 

@@ -1,38 +1,46 @@
 from django.contrib import admin
+from .models import SilesraBankAccount, CustomerBank, GeneralSetting, Category, carMake, CarType, OtherItemCategory, BusienssOrServiceType
 
-from django.contrib import admin
-from .models import SilesraBankAccount, GeneralSetting
-from django.utils.html import format_html
-
-@admin.register(SilesraBankAccount)
 class SilesraBankAccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'account_number', 'bank_icon_display')
+    list_display = ('name', 'account_number', 'bank_icon')
     search_fields = ('name', 'account_number')
     list_filter = ('name',)
 
-    def bank_icon_display(self, obj):
-        """
-        Display a small preview of the bank icon in the admin interface.
-        """
-        if obj.bank_icon:
-            return format_html("<img src='{}' style='height: 40px;' />", obj.bank_icon.url)
-        return "No Icon"
-    bank_icon_display.short_description = "Bank Icon"
-    bank_icon_display.short_description = "Bank Icon"
-    bank_icon_display.allow_tags = True
-
-@admin.register(GeneralSetting)
+class CustomerBankAdmin(admin.ModelAdmin):
+    list_display = ('name', 'bank_icon')
+    search_fields = ('name',)
+    
 class GeneralSettingAdmin(admin.ModelAdmin):
-    list_display = ('service_call_number', 'default_bank_account')
+    list_display = ('service_call_number', 'Default_bank_account')
     search_fields = ('service_call_number',)
-    autocomplete_fields = ('Default_bank_account',)
+    list_filter = ('Default_bank_account',)
 
-    def default_bank_account(self, obj):
-        """
-        Display the default bank account as a combination of name and account number.
-        """
-        if obj.Default_bank_account:
-            return f"{obj.Default_bank_account.name} - {obj.Default_bank_account.account_number}"
-        return "No Default Account"
-    default_bank_account.short_description = "Default Bank Account"
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
 
+class CarMakeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+class CarTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+class OtherItemCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+class BusienssOrServiceTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+# Registering models with customized admin configurations
+admin.site.register(SilesraBankAccount, SilesraBankAccountAdmin)
+admin.site.register(CustomerBank, CustomerBankAdmin)
+admin.site.register(GeneralSetting, GeneralSettingAdmin)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(carMake, CarMakeAdmin)
+admin.site.register(CarType, CarTypeAdmin)
+admin.site.register(OtherItemCategory, OtherItemCategoryAdmin)
+admin.site.register(BusienssOrServiceType, BusienssOrServiceTypeAdmin)

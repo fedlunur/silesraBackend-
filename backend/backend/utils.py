@@ -3,7 +3,7 @@ from django.apps import apps
 from django.db.models.base import ModelBase
 from user_managment.models import *
 from products.models import *
-from item.models import *
+
 
 def import_all_models():
    
@@ -27,13 +27,11 @@ def import_all_models():
 model_mapping = {
         
         'category': Category,
-         'subcategory': Subcategory,
-        'itemCommonProperty':ItemCommonProperty,
         'house':House,
-        'car':Cars,
-        'houseType':HouseType,
+        'car':Car,
+        'houseType':House,
         'carType':CarType,
-        'banks':Banks,
+        'banks':CustomerBank,
         'role': Role,
         'userrole': UserRole,
         
