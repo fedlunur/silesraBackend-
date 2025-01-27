@@ -4,7 +4,6 @@ from products.choices import BANK_CHOICES
 # Create your models here.
 class SilesraBankAccount(models.Model):
 
-
     name = models.CharField(max_length=255, choices=BANK_CHOICES)
     account_number = models.CharField(max_length=255, unique=True)
     bank_icon = models.ImageField(upload_to='bank_icons/', blank=True, null=True, help_text="Upload the bank's icon")
@@ -32,17 +31,25 @@ class GeneralSetting(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
-   
+    
     def __str__(self):
         return self.name
 class  carMake(models.Model):
-    name = models.CharField(max_length=255 ,unique=True)         
+    name = models.CharField(max_length=255 ,unique=True)    
+    def __str__(self):
+        return self.name        
 class CarType(models.Model):
-    name = models.CharField(max_length=255 ,unique=True)      
+    name = models.CharField(max_length=255 ,unique=True)  
+    def __str__(self):
+        return self.name      
 class OtherItemCategory(models.Model):
-    name = models.CharField(max_length=255 ,unique=True)     
+    name = models.CharField(max_length=255 ,unique=True)    
+    def __str__(self):
+        return self.name    
 class BusienssOrServiceType(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    def __str__(self):
+        return self.name    
     
    
     
