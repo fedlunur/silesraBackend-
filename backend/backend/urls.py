@@ -33,9 +33,9 @@ router.register(r'serviceorbussinesstypes', GenericModelViewSet, basename='servi
 router.register(r'carmake', GenericModelViewSet, basename='carmake')
 router.register(r'cartype', GenericModelViewSet, basename='cartype')
 router.register(r'customerbank', GenericModelViewSet, basename='customerbank')
-router.register(r'Generalsetting', GenericModelViewSet, basename='Generalsetting')
+router.register(r'generalsetting', GenericModelViewSet, basename='generalsetting')
 router.register(r'otheritemcatagory', GenericModelViewSet, basename='otheritemcatagory')
-router.register(r'Silesrabankaccount', GenericModelViewSet, basename='Silesrabankaccount')
+router.register(r'silesrabankaccount', GenericModelViewSet, basename='silesrabankaccount')
 
 
 

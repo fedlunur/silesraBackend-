@@ -46,9 +46,9 @@ model_mapping = {
         'carmake':carMake,
         'cartype':CarType,
         'customerbank':CustomerBank,
-        'Generalsetting':GeneralSetting,
+        'generalsetting':GeneralSetting,
         'otheritemcatagory':OtherItemCategory,
-        'Silesrabankaccount':SilesraBankAccount
+        'silesrabankaccount':SilesraBankAccount
     }
 
 # for any model exclude fileds 
