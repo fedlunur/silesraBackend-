@@ -15,12 +15,30 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
-
-
- 
 """ structure Routes """
 router.register(r'house', GenericModelViewSet, basename='house')
 router.register(r'car', GenericModelViewSet, basename='car')
+router.register(r'otheritem', GenericModelViewSet, basename='otheritem')
+
+router.register(r'serviceorbussinesstype', GenericModelViewSet, basename='serviceorbussinesstype')
+router.register(r'jobvacancy', GenericModelViewSet, basename='jobvacancy')
+router.register(r'lostorfoud', GenericModelViewSet, basename='lostorfoud')
+router.register(r'freestafforitem', GenericModelViewSet, basename='freestafforitem')
+router.register(r'messages', GenericModelViewSet, basename='messages')
+router.register(r'watchlist', GenericModelViewSet, basename='watchlist')
+
+# setting
+router.register(r'category', GenericModelViewSet, basename='category')
+router.register(r'serviceorbussinesstypes', GenericModelViewSet, basename='serviceorbussinesstypes')
+router.register(r'carmake', GenericModelViewSet, basename='carmake')
+router.register(r'cartype', GenericModelViewSet, basename='cartype')
+router.register(r'Customerbank', GenericModelViewSet, basename='Customerbank')
+router.register(r'Generalsetting', GenericModelViewSet, basename='Generalsetting')
+router.register(r'otheritemcatagory', GenericModelViewSet, basename='otheritemcatagory')
+router.register(r'Silesrabankaccount', GenericModelViewSet, basename='Silesrabankaccount')
+
+
+
 router.register(r'user', GenericModelViewSet, basename='user')
 router.register(r'role', GenericModelViewSet, basename='role')
 router.register(r'userRole', GenericModelViewSet, basename='userrole')

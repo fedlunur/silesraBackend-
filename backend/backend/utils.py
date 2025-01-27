@@ -3,7 +3,7 @@ from django.apps import apps
 from django.db.models.base import ModelBase
 from user_managment.models import *
 from products.models import *
-
+from setting.models import *
 
 def import_all_models():
    
@@ -25,16 +25,30 @@ def import_all_models():
 
 # left URl pattern and right Excat model name should map with URL's 
 model_mapping = {
-        
-        'category': Category,
-        'house':House,
+           # Products /all catagories 
         'car':Car,
-        'houseType':House,
-        'carType':CarType,
-        'banks':CustomerBank,
-        'role': Role,
-        'userrole': UserRole,
+        'house':House,
+        'otheritem':OtherItem,
+        'serviceorbussinesstype':ServiceOrBusinessType,
+        'jobvacancy':JobVacancy,
+        'lostorfoud':LostOrFound,
+        'freestafforitem':FreeStaffOrItem,
+        'messages':Message,
+        'watchlist':Watchlist,
         
+          # User managment
+        'user':User,
+        'role': Role,
+   
+        # setting
+        'category': Category,
+        'serviceorbussinesstypes':BusienssOrServiceType,
+        'carmake':carMake,
+        'cartype':CarType,
+        'Customerbank':CustomerBank,
+        'Generalsetting':GeneralSetting,
+        'otheritemcatagory':OtherItemCategory,
+        'Silesrabankaccount':SilesraBankAccount
     }
 
 # for any model exclude fileds 
