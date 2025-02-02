@@ -35,11 +35,10 @@ model_mapping = {
         'freestafforitem':FreeStaffOrItem,
         'messages':Message,
         'watchlist':Watchlist,
-        
+        'listingimage':ListingImage,
           # User managment
         'user':User,
         'role': Role,
-   
         # setting
         'category': Category,
         'serviceorbussinesstypes':BusienssOrServiceType,
@@ -50,7 +49,6 @@ model_mapping = {
         'otheritemcatagory':OtherItemCategory,
         'silesrabankaccount':SilesraBankAccount
     }
-
 # for any model exclude fileds 
 donot_include_fields = {
 
@@ -58,17 +56,19 @@ donot_include_fields = {
    'role': ['removed','created','updated','enabled'],
    
 }
-
 #return Json instead of Id for foreign keys 
 genericlist_filds_nested_model = {
    
     'user':['id','phone','first_name',],
     'role':['id','name'],
-   
-    
+    'cartype':['id','name'],
+    'carmake':['id','name'],
+    'otheritemcategory':['id','name'],
+    'busienssorservicetype':['id','name'],
+    'category':['id','name'],
+    'customerbank':['id','name'],
+    'silesrabankaccount':['id','name'],
 }
-
-
 
 def get_unique_users(users_queryset):
     unique_users = {user.id: user for user in users_queryset}

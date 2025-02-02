@@ -307,10 +307,13 @@ JAZZMIN_UI_TWEAKS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/admin/'
+
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # if you need to block access from postman make true 
 CSRF_COOKIE_HTTPONLY = False
-CSRF_TRUSTED_ORIGINS = [
-    'http://188.245.105.29',
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://188.245.105.29',
+# ]

@@ -1,7 +1,4 @@
-
-
 services:
-
   db:
     image: postgres:13
     volumes:
@@ -10,6 +7,8 @@ services:
       - POSTGRES_DB=silesra
       - POSTGRES_USER=silesra
       - POSTGRES_PASSWORD=silesra
+    networks:
+      - silesrabackend_my_network
     ports:
       - "5432:5432"
     restart: always
@@ -19,14 +18,18 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - silesrabackend_my_network
     ports:
       - "8080:80"
+    
   web:
     build: .
     image: silesralatest
     command: python manage.py runserver 0.0.0.0:8888
     volumes:
       - ./backend:/code
+      - ./media:/app/media
     ports:
       - "8888:8888"
     environment:
@@ -34,25 +37,13 @@ services:
       - POSTGRES_USER=silesra
       - POSTGRES_PASSWORD=silesra
       - POSTGRES_HOST=localhost
-    env_file:
-      - .env  
     depends_on:
       - db
-#   web:
-#     build: .
-#     image: csmlatest
-#     network_mode: "host"
-#     command: python manage.py runserver 0.0.0.0:8000
-#     volumes:
-#       - .:/app
-#     ports:
-#       - "8000:8000"
-#     depends_on:
-#       - db
-#     environment:
-#       - DEBUG=True
-#     restart: always
-   
+    env_file:
+      - .env   
+    networks:
+      - silesrabackend_my_network
 
-
-
+networks:
+  silesrabackend_my_network:
+    external: true

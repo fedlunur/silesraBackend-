@@ -1,0 +1,24 @@
+fieldset {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    margin-bottom: 10px;
+}
+
+input, select, textarea {
+    border-radius: 5px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}

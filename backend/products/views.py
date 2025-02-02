@@ -18,55 +18,46 @@ import json
 import traceback
 
 class DynamicFieldSerializer(serializers.ModelSerializer):
-   
     class Meta:
         model = None
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        model_name = kwargs.pop('model_name', None)  # Get the model name
+        model_name = kwargs.pop('model_name', None)
         super().__init__(*args, **kwargs)
 
         if model_name:
-            self.Meta.model = model_mapping.get(model_name)  # Assuming you have model mapping
-            
-        # Exclude specified fields based on model name
+            self.Meta.model = model_mapping.get(model_name)
+
         if model_name in donot_include_fields:
             for field in donot_include_fields[model_name]:
                 self.fields.pop(field, None)
 
-        # Automatically add nested serializers for ForeignKey fields
+        # Handle ForeignKey fields
         for field in self.Meta.model._meta.get_fields():
-            if field.is_relation and field.many_to_one:  # ForeignKey field
-                related_model = field.related_model
-                related_model_name = related_model.__name__.lower()
+            if field.is_relation and field.many_to_one:
+                self.fields[field.name] = self.RelationField(field.related_model)
 
-                # Define a nested serializer for the related model
-                class RelatedModelSerializer(serializers.ModelSerializer):
-                    class Meta:
-                        model = related_model
-                        fields = genericlist_filds_nested_model.get(related_model_name, ['id'])  # Adjust fields as needed
+    class RelationField(serializers.PrimaryKeyRelatedField):
+        """ Custom field to handle both ID-based writes and detailed reads. """
+        def __init__(self, model, **kwargs):
+            self.model = model
+            super().__init__(queryset=model.objects.all(), **kwargs)
 
-                # Add the nested serializer to the field
-                self.fields[field.name] = RelatedModelSerializer()
+        def to_representation(self, value):
+            """ Convert to { "id": value.id, "name": value.name } for GET requests. """
+            if isinstance(value, serializers.PKOnlyObject):  
+                # Fetch full instance when DRF optimizes the queryset
+                value = self.get_queryset().get(pk=value.pk)  
+            return {"id": value.id, "name": getattr(value, "name", str(value))}
 
-def get_serializer_class(model_name):
-    return DynamicFieldSerializer
+        def to_internal_value(self, data):
+            """ Convert ID to object for POST/PUT requests. """
+            return self.get_queryset().get(pk=data)
 
-class GenericModelSerializer(ModelSerializer):
- 
-    class Meta:
-        model = None  # This will be dynamically set in the viewset
-        fields = '__all__'  # Default to all fields
 
-    def __init__(self, *args, **kwargs):
-        model_name = kwargs.pop('model_name', None)  # Get the model name
-        super().__init__(*args, **kwargs)
-        if model_name in donot_include_fields:
-            for field in donot_include_fields[model_name]:
-                self.fields.pop(field, None)
-                
- #Generic ViewSet
+
+
 class GenericModelViewSet(viewsets.ModelViewSet):
   
     def get_queryset(self):
@@ -80,21 +71,16 @@ class GenericModelViewSet(viewsets.ModelViewSet):
         return model.objects.all()
 
     def get_serializer_class(self):
-        model_name = self.basename  # Get the model name from the basename
+        return DynamicFieldSerializer
         
-        # Define the serializer class dynamically
-        class DynamicSerializer(GenericModelSerializer):
-            class Meta(GenericModelSerializer.Meta):
-                model = self.get_queryset().model
-                fields = '__all__'  # Default to all fields
-        
-        # Return the serializer class itself, not an instance of it
-        return DynamicSerializer
+
 
     def get_serializer(self, *args, **kwargs):
         # Pass the model name to the serializer's init method
         kwargs['model_name'] = self.basename
         return super().get_serializer(*args, **kwargs)
+    
+    
 
     # Custom method for success response
     def success_response(self, data, message, status_code=status.HTTP_200_OK):
@@ -178,7 +164,8 @@ from django.http import FileResponse, Http404
 
 def download_file(request, file_name):
   
-    file_path = os.path.join(settings.MEDIA_ROOT, 'attachments', file_name)  
+    file_path = os.path.join(settings.MEDIA_ROOT, 'listingimage', file_name) 
+    print("!!!! File path",file_path) ;
     if not os.path.exists(file_path):
         raise Http404("File does not exist.")
     
@@ -187,5 +174,47 @@ def download_file(request, file_name):
     return response            
 
 
+from django.http import JsonResponse
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import APIView
+
+import os
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import APIView
+
+import os
+from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import APIView
+from django.conf import settings
+
+class UploadReceiptView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request):
+        receipt_image = request.FILES.get('receiptImage')
+        if receipt_image:
+            # Define the folder where you want to save the image
+            service_fee_folder = os.path.join(settings.MEDIA_ROOT, "Servicefee_images")
+
+            # Create the directory if it doesn't exist
+            os.makedirs(service_fee_folder, exist_ok=True)
+
+            # Save the file using Django's FileSystemStorage
+            fs = FileSystemStorage(location=service_fee_folder)
+            filename = fs.save(receipt_image.name, receipt_image)  # Save the file
+
+            # Get the file URL
+            file_url = fs.url("Servicefee_images/"+filename)  # This will be relative to the MEDIA_URL setting
+
+            # Return a response with the file URL
+            return JsonResponse({'message': 'Upload successful!', 'file_url': file_url})
+
+        else:
+            return JsonResponse({'message': 'No image uploaded!'}, status=400)
 
 
