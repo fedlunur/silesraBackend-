@@ -47,7 +47,11 @@ model_mapping = {
         'customerbank':CustomerBank,
         'generalsetting':GeneralSetting,
         'otheritemcatagory':OtherItemCategory,
-        'silesrabankaccount':SilesraBankAccount
+        'silesrabankaccount':SilesraBankAccount,
+        'accessory':Accessory,
+        'fashion':Fashion,
+        'electronics':Electronics
+        
     }
 # for any model exclude fileds 
 donot_include_fields = {
@@ -68,6 +72,7 @@ genericlist_filds_nested_model = {
     'category':['id','name'],
     'customerbank':['id','name'],
     'silesrabankaccount':['id','name'],
+   
 }
 
 def get_unique_users(users_queryset):

@@ -19,14 +19,14 @@ router = DefaultRouter()
 router.register(r'house', GenericModelViewSet, basename='house')
 router.register(r'car', GenericModelViewSet, basename='car')
 router.register(r'otheritem', GenericModelViewSet, basename='otheritem')
-
+router.register(r'listingimage', GenericModelViewSet, basename='listingimage')
 router.register(r'serviceorbussinesstype', GenericModelViewSet, basename='serviceorbussinesstype')
 router.register(r'jobvacancy', GenericModelViewSet, basename='jobvacancy')
 router.register(r'lostorfoud', GenericModelViewSet, basename='lostorfoud')
 router.register(r'freestafforitem', GenericModelViewSet, basename='freestafforitem')
 router.register(r'messages', GenericModelViewSet, basename='messages')
 router.register(r'watchlist', GenericModelViewSet, basename='watchlist')
-router.register(r'listingimage', GenericModelViewSet, basename='listingimage')
+
 # setting
 router.register(r'category', GenericModelViewSet, basename='category')
 router.register(r'serviceorbussinesstypes', GenericModelViewSet, basename='serviceorbussinesstypes')
@@ -36,6 +36,10 @@ router.register(r'customerbank', GenericModelViewSet, basename='customerbank')
 router.register(r'generalsetting', GenericModelViewSet, basename='generalsetting')
 router.register(r'otheritemcatagory', GenericModelViewSet, basename='otheritemcatagory')
 router.register(r'silesrabankaccount', GenericModelViewSet, basename='silesrabankaccount')
+
+router.register(r'accessory', GenericModelViewSet, basename='accessory')
+router.register(r'fashion', GenericModelViewSet, basename='fashion')
+router.register(r'electronics', GenericModelViewSet, basename='electronics')
 
 router.register(r'user', GenericModelViewSet, basename='user')
 router.register(r'role', GenericModelViewSet, basename='role')
@@ -53,12 +57,12 @@ urlpatterns = [
     re_path(r'^api/(?P<model_name>\w+)/list/?$', GenericListAPIView.as_view(), name='generic-list'),
     re_path(r'^api/(?P<model_name>\w+)/search/?$', GenericListAPIView.as_view(), name='generic-list'),
     #  re_path(r'^api/(?P<model_name>\w+)/advanced-list/?$', advanced_list, name='advanced-paginated-list'),
-    re_path(r'^api/download/(?P<file_name>[^/]+)/$', download_file, name='download_file'),
-
+  
+    re_path(r'^api/download/(?P<image_type>[A-Za-z0-9_]+)/(?P<file_path>.+)$', download_file, name='download_file'),
     # Counts api 
     # re_path(r'^api/(?P<model_name>\w+)/by/(?P<foreign_key_field>\w+)/(?P<foreign_key_value>\d+)/$', get_by_foreign_key, name='get_by_foreign_key'),
-
-    path('api/', include(router.urls)),
+    re_path(r'^api/modelinfo/(?P<model_name>\w+)/$', ModelContentTypeView.as_view(), name='model-content-type-list'),
+    re_path(r'^api/', include(router.urls)),
     re_path(r'^api/change-password/', PasswordChangeView.as_view(), name='change-password'),
     re_path(r'^api/uploadrecipts/', UploadReceiptView.as_view(), name='uploadrecipts'),
    

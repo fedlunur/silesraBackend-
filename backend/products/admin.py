@@ -7,15 +7,28 @@ from .models import (
     Car, House, OtherItem, Accessory, Fashion, Electronics, JobVacancy, 
     ServiceOrBusinessType, LostOrFound, FreeStaffOrItem, ListingImage
 )
-
 # Inline Image Display in the Form
+@admin.register(ListingImage)
+class ListingImageAdmin(admin.ModelAdmin):
+    list_display = ('listing', 'object_id', 'imagepath', 'uploaded_at', 'preview')  # Controls main admin columns
+    readonly_fields = ('preview',)  # Make preview read-only in form view
+
+    def preview(self, obj):
+        """Displays image previews in the DataTable."""
+        if obj.image:
+            return format_html('<img src="{}" width="100" height="75" style="object-fit: cover;"/>', obj.image.url)
+        return "No Image"
+
+    preview.short_description = "Preview"
+
+# Inline Image Display in Forms (nested within other models)
 class ListingImageInline(GenericTabularInline):
     model = ListingImage
     extra = 1  
-    readonly_fields = ('imagepath','preview',)
+    readonly_fields = ('preview',)  # Inline forms don't use list_display
 
     def preview(self, obj):
-        """Displays image previews in the form."""
+        """Displays image previews in the inline form."""
         if obj.image:
             return format_html('<img src="{}" width="100" height="75" style="object-fit: cover;"/>', obj.image.url)
         return "No Image"
@@ -23,7 +36,7 @@ class ListingImageInline(GenericTabularInline):
     preview.short_description = "Preview"
 
 class BaseListingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'city', 'category', 'approvalStatus', 'paymentStatus', 'created', 'updated', 'display_image')
+    list_display = ('name', 'city', 'category', 'approvalStatus', 'paymentStatus', 'created', 'updated', 'display_image','recipt_image')
     list_filter = ('city', 'approvalStatus', 'paymentStatus', 'created', 'updated')
     search_fields = ('name', 'phonenumber')
     readonly_fields = ('created', 'updated')
@@ -39,15 +52,18 @@ class BaseListingAdmin(admin.ModelAdmin):
     ]
 
     def display_image(self, obj):
-        # Get all images associated with this object
+   
         images = ListingImage.objects.filter(
             content_type=ContentType.objects.get_for_model(obj),
             object_id=obj.id
         )
-        # If there are images, generate the HTML for the preview and the modal slider
-        if images:
-            image_urls = [image.image.url for image in images]
-            first_image_url = image_urls[0]  # Use the first image as a thumbnail preview
+    
+   
+        valid_images = [image for image in images if image.image and hasattr(image.image, 'url')]
+        
+        if valid_images:
+            image_urls = [image.image.url for image in valid_images]
+            first_image_url = image_urls[0]  # Use the first valid image as a thumbnail preview
             
             # Creating the modal trigger and passing image URLs as data attributes
             return format_html(
@@ -57,11 +73,13 @@ class BaseListingAdmin(admin.ModelAdmin):
                 ",".join(image_urls),  # Passing all image URLs as a comma-separated string
                 first_image_url  # Thumbnail image URL
             )
+        
         return "No Image"
-    
+        
     def display_recipt(self, obj):
-        if obj.feeReciptImage:
-            # Check if feeReciptImage exists and return the preview HTML
+     
+        if obj.feeReciptImagePath:
+     
             try:
                 return format_html(
                     '<img src="{}" width="100" height="65" style="object-fit: cover;"/>',
@@ -70,7 +88,7 @@ class BaseListingAdmin(admin.ModelAdmin):
             except ValueError:
                 return "Invalid Image"  # In case the image URL is not valid or the image is missing
         return "No Image"  # Fallback if no receipt image is present
-
+ 
     display_image.short_description = "Preview Image"
     display_recipt.short_description = "Receipt"
     
@@ -156,7 +174,7 @@ admin.site.register(JobVacancy, JobVacancyAdmin)
 admin.site.register(ServiceOrBusinessType, ServiceOrBusinessTypeAdmin)
 admin.site.register(LostOrFound, LostOrFoundAdmin)
 admin.site.register(FreeStaffOrItem, FreeStaffOrItemAdmin)
-admin.site.register(ListingImage, ListingImageAdmin)
+
 
 class CustomAdminSite(admin.AdminSite):
     site_header = "Silesra Admin"

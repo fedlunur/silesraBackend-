@@ -17,7 +17,7 @@ def upload_to(instance, filename):
     ext = filename.split('.')[-1]
     unique_filename = f'{uuid.uuid4()}.{ext}'
     model_name = instance.__class__.__name__.lower()
-    
+    print("!!!!! The model name is " ,model_name);
     return os.path.join(model_name, unique_filename)
 class BaseListing(models.Model):
     name = models.CharField( max_length=100, blank=True, null=True)
@@ -38,10 +38,10 @@ class ListingImage(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # Reference to ContentType
     object_id = models.PositiveIntegerField()  # Foreign key to the model instance ID
     listing = GenericForeignKey('content_type', 'object_id')  # This links the image to any model via GenericForeignKey
-    image = models.ImageField(upload_to='listing_images/')  # Store images in media/listing_images/
+    image = models.ImageField(upload_to='listing_images/',blank=True,null=True)  # Store images in media/listing_images/
     imagepath = models.CharField(max_length=50, blank=True, null=True)  # Optional path to store image path
     uploaded_at = models.DateTimeField(auto_now_add=True)  # Timestamp when image is uploaded
-    
+  
     def save(self, *args, **kwargs):
         """Override save method to store filename in imagepath."""
         if self.image and not self.imagepath:
@@ -50,6 +50,7 @@ class ListingImage(models.Model):
         super().save(*args, **kwargs)  # Call the parent save method
     def __str__(self):
         return f"Image for {self.listing}" 
+    
 class ServiceFee(models.Model):
     contentType = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()  # Rename objectId to object_id
@@ -57,8 +58,16 @@ class ServiceFee(models.Model):
     servicefeeBank = models.ForeignKey(CustomerBank, related_name='%(class)s', on_delete=models.CASCADE, blank=True, null=True)
     feeReciptImage = models.ImageField(upload_to="Servicefee_images/", default="payment.jpg", blank=True, null=True)
     feeReciptRefnumber = models.CharField(max_length=100, blank=True, null=True)
+    feeReciptImagePath=models.CharField(max_length=200, blank=True, null=True) 
 
-
+    def save(self, *args, **kwargs):
+        """Override save method to store filename in imagepath."""
+        if self.feeReciptImage and not self.feeReciptImagePath:
+            
+            self.feeReciptImagePath = os.path.basename(self.feeReciptImage.name)  # Save only the filename
+        super().save(*args, **kwargs)  # Call the parent save method
+    def __str__(self):
+        return f"Image for {self.listing}" 
 class Car(BaseListing):
     sell_or_rent = models.CharField(choices=sell_or_rent, max_length=50, null=True, blank=True)
     carMake = models.ForeignKey(carMake, related_name='car', on_delete=models.CASCADE)
@@ -74,7 +83,7 @@ class Car(BaseListing):
    
 
     def __str__(self):
-        return self.model
+        return f"{self.carMake}"
 
         
 class House(BaseListing):

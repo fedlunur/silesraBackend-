@@ -46,7 +46,7 @@ housetypes=[
         ('House G+', 'House G+'),
         ('Commercial', 'Commercial'),
         ('GuestHouse', 'GuestHouse'),
-        
+        ('Apartment','Apartment'),
         ('Warehouse', 'Warehouse'),
         ('Land', 'Land'),
         ]
